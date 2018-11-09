@@ -3,3 +3,5 @@ _trial_temp/
 build/
 *.egg
 *.egg-info
+.eggs/
+dist/
