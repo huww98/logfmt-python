@@ -47,3 +47,11 @@ To install it, simply: ::
 
     pip install logfmt
 
+
+Building and publishing
+-----------------------
+
+::
+
+   python setup.py sdist bdist_wheel
+   twine upload dist/*
