@@ -53,7 +53,8 @@ To install it, simply: ::
 Building and publishing
 -----------------------
 
-::
+Update ``pyproject.toml``'s version number, commit and tag appropriately.
 
-   python setup.py sdist bdist_wheel
-   twine upload dist/*
+Ensure you have poetry installed, ``pip install poetry``, then::
+
+   poetry publish

@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "logfmt"
+version = "0.4.0"
+description = "Parse and generate log lines in the logfmt style."
+authors = [
+    "Timothee Peignier <timothee.peignier@tryphon.org>",
+    "Jamu Kakar <jkakar@kakar.ca>",
+    "Kit La Touche <kit@transneptune.net>",
+]
+license = "MIT"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 2.6",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3.2",
+    "Programming Language :: Python :: 3.3",
+    "Programming Language :: Python :: 3.4",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Topic :: Utilities",
+]
+include = [
+    "README.rst",
+    "LICENSE",
+]
+
+[tool.poetry.dependencies]
+python = "^2.6 || ^3.2"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
