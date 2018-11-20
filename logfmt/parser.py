@@ -15,15 +15,15 @@ def parse_line(line):
     for i, c in enumerate(line):
         i += 1
         if state == GARBAGE:
-            if c > ' ' and c != '"' and c != '=':
+            if c > " " and c != '"' and c != "=":
                 key = (c,)
                 state = KEY
             continue
         if state == KEY:
-            if c > ' ' and c != '"' and c != '=':
+            if c > " " and c != '"' and c != "=":
                 state = KEY
                 key += (c,)
-            elif c == '=':
+            elif c == "=":
                 output["".join(key).strip()] = True
                 state = EQUAL
             else:
@@ -33,7 +33,7 @@ def parse_line(line):
                 output["".join(key).strip()] = True
             continue
         if state == EQUAL:
-            if c > ' ' and c != '"' and c != '=':
+            if c > " " and c != '"' and c != "=":
                 value = (c,)
                 state = IVALUE
             elif c == '"':
@@ -46,7 +46,7 @@ def parse_line(line):
                 output["".join(key).strip()] = "".join(value) or True
             continue
         if state == IVALUE:
-            if not (c > ' ' and c != '"' and c != '='):
+            if not (c > " " and c != '"' and c != "="):
                 output["".join(key).strip()] = "".join(value)
                 state = GARBAGE
             else:
@@ -55,7 +55,7 @@ def parse_line(line):
                 output["".join(key).strip()] = "".join(value)
             continue
         if state == QVALUE:
-            if c == '\\':
+            if c == "\\":
                 escaped = True
             elif c == '"':
                 if escaped:

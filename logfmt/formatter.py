@@ -23,9 +23,11 @@ def format_line(extra):
 
 class LogfmtFormatter(logging.Formatter):
     def format(self, record):
-        return ' '.join([
-            'at=%' % record.levelname,
-            'msg="%"' % record.getMessage().replace('"', '\\"'),
-            'process=%' % record.processName,
-            format_line(getattr(record, 'context', {})),
-        ])
+        return " ".join(
+            [
+                "at=%" % record.levelname,
+                'msg="%"' % record.getMessage().replace('"', '\\"'),
+                "process=%" % record.processName,
+                format_line(getattr(record, "context", {})),
+            ]
+        )
