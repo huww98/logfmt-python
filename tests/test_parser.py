@@ -45,7 +45,7 @@ class ParserTestCase(TestCase):
         self.assertEqual(data, {'key': "quoted value"})
 
     def test_escaped_quote_value(self):
-        data = parse_line('key="quoted \\" value" r="esc\t"')
+        data = parse_line('key="quoted \\" value" r="esc\\t"')
         self.assertEqual(data, {'key': 'quoted \" value', 'r': "esc\t"})
 
     def test_mixed_pairs(self):

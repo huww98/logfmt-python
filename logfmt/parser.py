@@ -1,70 +1,63 @@
 # -*- coding: utf-8 -*-
+import json.decoder
+import enum
 
-GARBAGE = 0
-KEY = 1
-EQUAL = 2
-IVALUE = 3
-QVALUE = 4
+class State(enum.Enum):
+    GARBAGE = 0
+    KEY = 1
+    EQUAL = 2
 
+# returns the index after the last character of the ident
+def parse_ident(str, start):
+    i = start
+    while i < len(str):
+        c = str[i]
+        if c > " " and c != '"' and c != "=":
+            i += 1
+        else:
+            return i
+    return i
 
 def parse_line(line):
+    json_decoder = json.decoder.JSONDecoder()
     output = {}
-    key, value = (), ()
-    escaped = False
-    state = GARBAGE
-    for i, c in enumerate(line):
+    state: State = State.GARBAGE
+    i = 0
+    value = True
+
+    def conclude():
+        nonlocal state, i
+        output[key] = value
+        state = State.GARBAGE
         i += 1
-        if state == GARBAGE:
-            if c > " " and c != '"' and c != "=":
-                key = (c,)
-                state = KEY
-            continue
-        if state == KEY:
-            if c > " " and c != '"' and c != "=":
-                state = KEY
-                key += (c,)
-            elif c == "=":
-                output["".join(key).strip()] = True
-                state = EQUAL
-            else:
-                output["".join(key).strip()] = True
-                state = GARBAGE
-            if i >= len(line):
-                output["".join(key).strip()] = True
-            continue
-        if state == EQUAL:
-            if c > " " and c != '"' and c != "=":
-                value = (c,)
-                state = IVALUE
-            elif c == '"':
-                value = ()
-                escaped = False
-                state = QVALUE
-            else:
-                state = GARBAGE
-            if i >= len(line):
-                output["".join(key).strip()] = "".join(value) or True
-            continue
-        if state == IVALUE:
-            if not (c > " " and c != '"' and c != "="):
-                output["".join(key).strip()] = "".join(value)
-                state = GARBAGE
-            else:
-                value += (c,)
-            if i >= len(line):
-                output["".join(key).strip()] = "".join(value)
-            continue
-        if state == QVALUE:
-            if c == "\\":
-                escaped = True
-            elif c == '"':
-                if escaped:
-                    escaped = False
-                    value += (c,)
-                    continue
-                output["".join(key).strip()] = "".join(value)
-                state = GARBAGE
-            else:
-                value += (c,)
-            continue
+
+    while i < len(line):
+        c = line[i]
+        match state:
+            case State.GARBAGE:
+                if c > " " and c != '"' and c != "=":
+                    m = i
+                    i = parse_ident(line, i)
+                    key = line[m:i]
+                    state = State.KEY
+                    value = True
+                else:
+                    i += 1
+            case State.KEY:
+                if c == "=":
+                    state = State.EQUAL
+                    i += 1
+                else:
+                    conclude()
+            case State.EQUAL:
+                if c > " " and c != '"' and c != "=":
+                    m = i
+                    i = parse_ident(line, i)
+                    value = line[m:i]
+                elif c == '"':
+                    value, i = json_decoder.raw_decode(line, idx=i)
+                conclude()
+    
+    if state != State.GARBAGE:
+        conclude()
     return output
